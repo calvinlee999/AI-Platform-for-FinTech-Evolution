@@ -1,0 +1,170 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - fintech-network
+
+  # Core Banking Services
+  customer-service:
+    build:
+      context: ./services/customer-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/customer_db
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - fintech-network
+
+  risk-service:
+    build:
+      context: ./services/risk-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/risk_db
+      - KAFKA_BROKERS=kafka:9092
+      - ML_MODEL_ENDPOINT=http://ml-service:8080
+    depends_on:
+      - postgres
+      - kafka
+      - ml-service
+    networks:
+      - fintech-network
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/payment_db
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - fintech-network
+
+  # AI/ML Services
+  ml-service:
+    build:
+      context: ./services/ml-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8080"
+    environment:
+      - MODEL_STORE_PATH=/app/models
+      - FEATURE_STORE_URL=http://feature-store:8080
+    volumes:
+      - ./models:/app/models
+    networks:
+      - fintech-network
+
+  feature-store:
+    build:
+      context: ./services/feature-store
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/feature_store_db
+    depends_on:
+      - postgres
+    networks:
+      - fintech-network
+
+  # Data Infrastructure
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_MULTIPLE_DATABASES=customer_db,risk_db,payment_db,feature_store_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - fintech-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fintech-network
+
+  # Message Streaming
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - fintech-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - fintech-network
+
+  # Monitoring & Observability
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - fintech-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - fintech-network
+
+networks:
+  fintech-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
