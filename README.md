@@ -412,10 +412,9 @@ sequenceDiagram
     Gateway->>+AuthSvc: Authorization Request + Customer ID
     Note right of Gateway: t=10ms - Gateway routing
     
-    AuthSvc->>+Cache: Check fraud pattern cache
-    Note right of AuthSvc: t=15ms - Cache lookup
-    
     alt Cache Hit (Fraud Pattern Exists)
+        AuthSvc->>+Cache: Check fraud pattern cache
+        Note right of AuthSvc: t=15ms - Cache lookup
         Cache-->>AuthSvc: Known fraud pattern
         Note right of Cache: t=20ms - Immediate response
         deactivate Cache
@@ -430,6 +429,8 @@ sequenceDiagram
         deactivate POS
         Note right of Customer: t=30ms TOTAL - Fast decline
     else Cache Miss (New Pattern)
+        AuthSvc->>+Cache: Check fraud pattern cache
+        Note right of AuthSvc: t=15ms - Cache lookup
         Cache-->>AuthSvc: No cached result
         Note right of Cache: t=20ms - Cache miss
         deactivate Cache
