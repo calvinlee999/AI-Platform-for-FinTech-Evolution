@@ -413,6 +413,7 @@ sequenceDiagram
     Note right of Gateway: t=10ms - Gateway routing
     
     AuthSvc->>+Cache: Check fraud pattern cache
+    activate Cache
     Note right of AuthSvc: t=15ms - Cache lookup
     
     alt Cache Hit (Fraud Pattern Exists)
@@ -461,6 +462,7 @@ sequenceDiagram
         
         alt Low Risk Score (< 0.3)
             AuthSvc->>+Cache: Cache approval pattern
+            activate Cache
             deactivate Cache
             AuthSvc-->>Gateway: APPROVE
             deactivate AuthSvc
@@ -481,6 +483,7 @@ sequenceDiagram
             Note right of Customer: t=95ms TOTAL - Monitored approval
         else High Risk Score (> 0.7)
             AuthSvc->>+Cache: Cache decline pattern
+            activate Cache
             deactivate Cache
             AuthSvc->>+Monitor: Log fraud attempt
             deactivate Monitor
