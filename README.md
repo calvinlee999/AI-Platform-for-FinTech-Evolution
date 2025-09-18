@@ -390,10 +390,6 @@ graph TB
 See the Real-Time Fraud Detection sequence diagram in the docs folder:
 
 [Real-Time Fraud Detection Sequence](docs/sequence-diagrams/realtime-fraud-detection.md)
-            Note right of Customer: t=100ms TOTAL - AI-based decline
-        end
-    end
-```
 
 ### Agentic Development Lifecycle Sequence
 
