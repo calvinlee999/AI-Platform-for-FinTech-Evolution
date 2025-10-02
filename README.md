@@ -36,6 +36,66 @@ The AI Platform for FinTech Evolution is designed to **transform legacy FinTech 
 
 ### **3. 🔄 Agentic End-to-End Development to Deployment**
 
+#### **Specification-Driven Development (SDD) Framework**
+
+Our platform implements **GitHub Spec-Kit principles** for systematic, executable specification workflows that transform feature requests into production code:
+
+##### **🌱 Core SDD Workflow**
+
+| **Phase** | **Command** | **Output** | **Timeline** |
+|-----------|------------|-----------|--------------|
+| **Constitution** | `/constitution` | Project governing principles & development guidelines | One-time setup |
+| **Specification** | `/specify` | Feature requirements, user stories, acceptance criteria | 5-10 mins |
+| **Clarification** | `/clarify` | Resolved ambiguities and underspecified areas | 5-10 mins |
+| **Planning** | `/plan` | Technical implementation with tech stack decisions | 5-15 mins |
+| **Task Breakdown** | `/tasks` | Actionable task list with parallelization markers | 5 mins |
+| **Analysis** | `/analyze` | Cross-artifact consistency & coverage validation | 5 mins |
+| **Implementation** | `/implement` | Executable feature code with tests | Auto-generated |
+
+**Total Time: 30-50 minutes** from feature request to production-ready code (vs. 2-4 weeks traditional)
+
+##### **📋 Specification-First Architecture**
+
+```text
+Traditional Approach:          Spec-Driven Approach:
+Code is Truth                  Specification is Truth
+├─ Specs guide code           ├─ Specs generate code
+├─ Specs drift over time      ├─ Specs stay synchronized
+├─ Manual propagation         ├─ Automatic regeneration
+└─ Slow pivots                └─ Instant pivots
+
+Benefits:
+✅ No gap between intent and implementation
+✅ Specifications remain executable and living
+✅ Changes regenerate implementations automatically
+✅ Multiple parallel implementations from same spec
+✅ Architectural consistency enforced by constitution
+```
+
+##### **🏛️ Constitutional Foundation**
+
+**Nine Immutable Development Principles:**
+
+| **Article** | **Principle** | **Enforcement** |
+|------------|--------------|----------------|
+| **I** | Library-First | Every feature starts as standalone library |
+| **II** | CLI Interface Mandate | All functionality exposed via command-line |
+| **III** | Test-First Imperative | Tests written and approved before implementation |
+| **IV-VI** | Repository Standards | Git-based workflow with branching strategies |
+| **VII** | Simplicity Gate | Maximum 3 projects, no future-proofing |
+| **VIII** | Anti-Abstraction | Use frameworks directly, single model representation |
+| **IX** | Integration-First Testing | Real databases, actual services, contract tests mandatory |
+
+##### **🔄 Intent-Driven Development Lifecycle**
+
+- **Natural Language Specifications**: Business requirements in human-readable format
+- **AI-Powered Code Generation**: Automated translation from spec to implementation
+- **Continuous Refinement**: Iterative specification evolution with bidirectional feedback
+- **Research-Driven Context**: Automated technical context gathering and analysis
+- **Branching for Exploration**: Multiple implementation approaches from single specification
+
+##### **🎯 Production-Ready Implementation**
+
 - **Automated Feature Development**: Requirements to production with AI-driven development lifecycle
 - **Micro Frontend Architecture**: Scalable UI architecture with independent deployment capabilities
 - **Microservice Orchestration**: Domain-driven design with API-first development approach
@@ -384,9 +444,88 @@ graph TB
     ArchitectAgent --> IndustryBestPractices
 ```
 
+#### **Spec-Kit Agent Workflow Integration**
+
+The Spec-Kit methodology integrates seamlessly with our Agent Swarm architecture:
+
+```mermaid
+sequenceDiagram
+    participant PM as Product Manager
+    participant SpecKit as Spec-Kit CLI
+    participant RequirementsAgent as Requirements Agent
+    participant ArchitectAgent as Architecture Agent
+    participant CodeAgent as Code Agent
+    participant TestAgent as Testing Agent
+    participant Constitution as Constitution Memory
+    participant Git as Git Repository
+
+    Note over PM,Git: Spec-Driven Development Workflow (30-50 mins)
+    
+    PM->>SpecKit: /specify "New payment processing feature"
+    SpecKit->>Git: Create feature branch (004-payment-processing)
+    SpecKit->>RequirementsAgent: Generate structured specification
+    RequirementsAgent->>Constitution: Validate against principles
+    RequirementsAgent->>SpecKit: spec.md with user stories & acceptance criteria
+    SpecKit->>Git: Commit specs/004-payment-processing/spec.md
+    
+    PM->>SpecKit: /clarify
+    SpecKit->>RequirementsAgent: Identify underspecified areas
+    RequirementsAgent-->>PM: Questions about ambiguities
+    PM-->>RequirementsAgent: Provide clarifications
+    RequirementsAgent->>SpecKit: Updated spec.md (no [NEEDS CLARIFICATION])
+    
+    PM->>SpecKit: /plan "Spring Boot + PostgreSQL + Stripe API"
+    SpecKit->>ArchitectAgent: Create implementation plan
+    ArchitectAgent->>Constitution: Check Simplicity & Anti-Abstraction Gates
+    ArchitectAgent->>SpecKit: plan.md + data-model.md + contracts/
+    SpecKit->>Git: Commit technical specifications
+    
+    PM->>SpecKit: /tasks
+    SpecKit->>ArchitectAgent: Analyze plan & dependencies
+    ArchitectAgent->>SpecKit: tasks.md with [P] parallelization markers
+    
+    PM->>SpecKit: /analyze
+    SpecKit->>RequirementsAgent: Cross-artifact consistency check
+    RequirementsAgent->>ArchitectAgent: Coverage validation
+    ArchitectAgent-->>SpecKit: Analysis report
+    
+    PM->>SpecKit: /implement
+    
+    par Test-First Implementation
+        SpecKit->>TestAgent: Generate contract tests
+        TestAgent->>Git: Commit test files
+        TestAgent-->>PM: Tests ready for approval
+        PM-->>TestAgent: Approve tests
+        TestAgent->>TestAgent: Verify tests FAIL (Red phase)
+    and Code Generation
+        SpecKit->>CodeAgent: Generate implementation code
+        CodeAgent->>Constitution: Validate Library-First principle
+        CodeAgent->>Git: Commit source files
+    end
+    
+    SpecKit->>TestAgent: Run test suite
+    TestAgent-->>SpecKit: All tests PASS (Green phase)
+    SpecKit-->>PM: Feature complete & ready for deployment
+    
+    Note over PM,Git: Specification remains source of truth<br/>Code regenerates from spec on changes
+```
+
+**Key Integration Points:**
+
+| **Spec-Kit Phase** | **Agent Swarm Role** | **Constitutional Validation** |
+|--------------------|----------------------|------------------------------|
+| `/constitution` | All agents reference governing principles | Immutable development DNA |
+| `/specify` | RequirementsAgent translates to structured requirements | Completeness & testability checks |
+| `/clarify` | RequirementsAgent identifies ambiguities | No implementation assumptions |
+| `/plan` | ArchitectAgent creates technical design | Simplicity & Anti-Abstraction Gates |
+| `/tasks` | TaskRouter assigns to specialized agents | Parallelization optimization |
+| `/analyze` | Cross-agent consistency validation | Coverage & gap analysis |
+| `/implement` | CodeAgent + TestAgent (Test-First TDD) | Library-First & Integration-First |
+
 ## Level 0 Sequence Diagrams - AI Applications
 
 ### Real-Time Fraud Detection Sequence
+
 See the Real-Time Fraud Detection sequence diagram in the docs folder:
 
 [Real-Time Fraud Detection Sequence](docs/sequence-diagrams/realtime-fraud-detection.md)
