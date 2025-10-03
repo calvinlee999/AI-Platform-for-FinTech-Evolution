@@ -192,3 +192,7 @@ application-*.properties
 *.pid
 frontend.pid
 backend.pid
+
+# Internal documentation (not for public repo)
+REVIEW_CYCLE_2_COMPLETE.md
+*_COMPLETE.md
